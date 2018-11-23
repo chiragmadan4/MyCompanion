@@ -12,48 +12,40 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessBillPage extends AppCompatActivity {
-    ListView listView;
-    String roll_no;
+public class AdminLeaveEntryPage extends AppCompatActivity {
     String json_string;
-    TextView textView;
+    ListView listView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mess_bill_page);
-        roll_no = getIntent().getExtras().getString("roll_no");
-        textView = findViewById(R.id.textView1);
-        textView.setText("Mess bill for student "+roll_no);
+        setContentView(R.layout.activity_admin_leave_entry_page);
         listView = findViewById(R.id.listView);
-
         BackgroundTask backgroundTask = new BackgroundTask(this);
-        backgroundTask.execute("getMessBill",roll_no);
+        backgroundTask.execute("getLeaveEntry");
     }
 
-    class propertyArrayAdapter extends ArrayAdapter<Bill>
+
+    class propertyArrayAdapter extends ArrayAdapter<LeaveEntryClass>
     {
         private Context context;
-        private List<Bill> list;
+        private List<LeaveEntryClass> list;
 
         public propertyArrayAdapter(Context context,int resource,
-                                    ArrayList<Bill> objects)
+                                    ArrayList<LeaveEntryClass> objects)
         {
             super(context,resource,objects);
             this.context = context;
@@ -61,18 +53,23 @@ public class MessBillPage extends AppCompatActivity {
         }
         public View getView(int position, View convertView, ViewGroup parent) {
             //get the property we are displaying
-            Bill obj = list.get(position);
+            LeaveEntryClass obj = list.get(position);
 
             //get the inflater and inflate the XML layout for each item
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.bill_layout, null);
-            TextView textView1 = view.findViewById(R.id.textView1);
+            View view = inflater.inflate(R.layout.leaveentrylayout, null);
             TextView textView2 = view.findViewById(R.id.textView2);
-            textView1.setText(obj.getMonth());
-            textView2.setText(obj.getBill());
+            TextView textView3 = view.findViewById(R.id.textView3);
+            TextView textView4 = view.findViewById(R.id.textView4);
+            TextView textView5 = view.findViewById(R.id.textView5);
+            textView2.setText(obj.getRoll_no());
+            textView3.setText(obj.getRoom_no());
+            textView4.setText(obj.getFrom_date());
+            textView5.setText(obj.getTo_date());
             return  view;
         }
     }
+
 
     class BackgroundTask extends AsyncTask<String,Void,String> {
 
@@ -91,26 +88,32 @@ public class MessBillPage extends AppCompatActivity {
         protected void onPostExecute(String result) {
 
             super.onPostExecute(result);
+            //Toast.makeText(ctx,"menu is....",Toast.LENGTH_LONG).show();
+            ArrayList<LeaveEntryClass> leaveEntries = new ArrayList<>();
             try
             {
                 JSONObject obj = new JSONObject(result);
                 JSONArray arr = obj.getJSONArray("server response");
-                ArrayList<Bill> bills = new ArrayList<>();
-                for (int i=0;i<arr.length();i++)
+                for(int i=0;i<arr.length();i++)
                 {
-                    JSONObject obj1= arr.getJSONObject(i);
-                    bills.add(new Bill(obj1.getString("Month"),obj1.getString("mess_bill")));
-                    Log.i("msg",obj1.getString("Month"));
-                    Log.i("msg",obj1.getString("mess_bill"));
+                    Log.i("msg",arr.getJSONObject(i).getString("Name"));
+                    Log.i("msg","output");
+                    leaveEntries.add(new LeaveEntryClass(arr.getJSONObject(i).getString("Name"),
+                            arr.getJSONObject(i).getString("Roll_no"),
+                            arr.getJSONObject(i).getString("Room_no"),
+                            arr.getJSONObject(i).getString("From_date"),
+                            arr.getJSONObject(i).getString("To_date")));
                 }
-                propertyArrayAdapter propertyArrayAdapter = new propertyArrayAdapter(ctx,0,bills);
-                listView.setAdapter(propertyArrayAdapter);
+                propertyArrayAdapter arrayAdapter = new propertyArrayAdapter(ctx, 0,leaveEntries);
+                listView.setAdapter(arrayAdapter);
 
-            }catch (Exception e)
+            }
+            catch (Exception e)
             {
-                Log.i("msg","error in parsing",e);
+                Log.i("msg","error in parsing json",e);
                 e.printStackTrace();
             }
+
             //Toast.makeText(ctx,result,Toast.LENGTH_LONG).show();
         }
 
@@ -123,11 +126,9 @@ public class MessBillPage extends AppCompatActivity {
         protected String doInBackground(String... params) {
             String method = params[0];
             String reg_url;
-
-            if(method.equals("getMessBill"))
+            if(method.equals("getLeaveEntry"))
             {
-                reg_url = "http://192.168.137.1/getMessBill.php";
-                String roll_no = params[1];
+                reg_url = "http://192.168.137.1/getLeaveEntry.php";
                 Log.i("msg", "reached register");
                 try
                 {
@@ -140,14 +141,9 @@ public class MessBillPage extends AppCompatActivity {
 
                     OutputStream os = httpURLConnection.getOutputStream();
                     Log.i("msg","reached 3");
-                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(os,"UTF-8"));
 
-                    String data = URLEncoder.encode("roll_no","UTF-8")+"="+URLEncoder.encode(roll_no,"UTF-8");
-
-                    bufferedWriter.write(data);
-                    bufferedWriter.flush();
-                    bufferedWriter.close();
                     os.close();
+
                     InputStream inputStream = httpURLConnection.getInputStream();
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
                     StringBuilder stringBuilder = new StringBuilder();
@@ -160,16 +156,14 @@ public class MessBillPage extends AppCompatActivity {
                     inputStream.close();
                     Log.i("msg","reached 4");
 
-                    return stringBuilder.toString().trim();
+                    return stringBuilder.toString().trim()+"checkString";
                 }
                 catch (Exception e)
                 {
-                    Toast.makeText(ctx,"Please try again later",Toast.LENGTH_LONG).show();
                     Log.i("msg","reached catch");
                     Log.e("msg","exception",e);
                     e.printStackTrace();
                 }
-
             }
             return null;
         }

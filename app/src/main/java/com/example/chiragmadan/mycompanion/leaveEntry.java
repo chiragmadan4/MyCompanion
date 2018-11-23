@@ -33,8 +33,8 @@ public class leaveEntry extends AppCompatActivity {
                 editText2.getText().toString(),
                 editText3.getText().toString(),
                 editText4.getText().toString(),
-                editText5.getText().toString(),
-                "8");
+                editText5.getText().toString()
+                );
     }
 
     @Override
@@ -89,7 +89,6 @@ public class leaveEntry extends AppCompatActivity {
                 String room_no = params[3];
                 String from_date = params[4];
                 String to_date = params[5];
-                String duration = params[6];
                 Log.i("msg", "reached register");
                 try
                 {
@@ -108,8 +107,7 @@ public class leaveEntry extends AppCompatActivity {
                             URLEncoder.encode("roll_no","UTF-8")+"="+URLEncoder.encode(roll_no,"UTF-8")+"&"+
                             URLEncoder.encode("room_no","UTF-8")+"="+URLEncoder.encode(room_no,"UTF-8")+"&"+
                             URLEncoder.encode("from_date","UTF-8")+"="+URLEncoder.encode(from_date,"UTF-8")+"&"+
-                            URLEncoder.encode("to_date","UTF-8")+"="+URLEncoder.encode(to_date,"UTF-8")+"&"+
-                            URLEncoder.encode("duration","UTF-8")+"="+URLEncoder.encode(duration,"UTF-8")+"&";
+                            URLEncoder.encode("to_date","UTF-8")+"="+URLEncoder.encode(to_date,"UTF-8")+"&";
 
                     bufferedWriter.write(data);
                     bufferedWriter.flush();

@@ -52,6 +52,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void adminHomePage(View view)
+    {
+        Intent i =new Intent(MainActivity.this,AdminHomePage.class);
+        startActivity(i);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -27,7 +27,9 @@
             android:parentActivityName=".HomeActivity" />
         <activity android:name=".MessBillPage" />
         <activity android:name=".MessMenuPage" />
-        <activity android:name=".GuestPage"></activity>
+        <activity android:name=".GuestPage" />
+        <activity android:name=".AdminHomePage" />
+        <activity android:name=".AdminLeaveEntryPage"></activity>
     </application>
 
 </manifest>
