@@ -29,7 +29,8 @@
         <activity android:name=".MessMenuPage" />
         <activity android:name=".GuestPage" />
         <activity android:name=".AdminHomePage" />
-        <activity android:name=".AdminLeaveEntryPage"></activity>
+        <activity android:name=".AdminLeaveEntryPage" />
+        <activity android:name=".AdminFeedbackPage"></activity>
     </application>
 
 </manifest>

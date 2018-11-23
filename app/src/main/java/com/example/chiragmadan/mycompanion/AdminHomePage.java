@@ -13,6 +13,12 @@ public class AdminHomePage extends AppCompatActivity {
         startActivity(i);
     }
 
+    public void adminFeedbackPage(View view)
+    {
+        Intent i = new Intent(AdminHomePage.this,AdminFeedbackPage.class);
+        startActivity(i);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
