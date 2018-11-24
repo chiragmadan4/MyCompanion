@@ -1,11 +1,13 @@
 package com.example.chiragmadan.mycompanion;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -16,6 +18,9 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class leaveEntry extends AppCompatActivity {
 
@@ -25,6 +30,66 @@ public class leaveEntry extends AppCompatActivity {
     EditText editText3;
     EditText editText4;
     EditText editText5;
+
+    Calendar myCalendar = Calendar.getInstance();
+    DatePickerDialog.OnDateSetListener date1 = new DatePickerDialog.OnDateSetListener() {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            // TODO Auto-generated method stub
+            myCalendar.set(Calendar.YEAR, year);
+            myCalendar.set(Calendar.MONTH, monthOfYear);
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabel1();
+            //editText4.setText(year);
+        }
+
+    };
+
+    private void updateLabel1() {
+        String myFormat = "yyyy-MM-dd"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+        editText4.setText(sdf.format(myCalendar.getTime()));
+    }
+
+    public void showDateDialog(View view) {
+            // TODO Auto-generated method stub
+            new DatePickerDialog(leaveEntry.this, date1, myCalendar
+                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                    myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    DatePickerDialog.OnDateSetListener date2 = new DatePickerDialog.OnDateSetListener() {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            // TODO Auto-generated method stub
+            myCalendar.set(Calendar.YEAR, year);
+            myCalendar.set(Calendar.MONTH, monthOfYear);
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabel2();
+            //editText4.setText(year);
+        }
+
+    };
+
+    private void updateLabel2() {
+        String myFormat = "yyyy-MM-dd"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+        editText5.setText(sdf.format(myCalendar.getTime()));
+    }
+
+    public void showDateDialog2(View view) {
+        // TODO Auto-generated method stub
+        new DatePickerDialog(leaveEntry.this, date2, myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+
+
     public void uploadLeaveEntry(View view)
     {
         BackgroundTask backgroundTask = new BackgroundTask(this);
@@ -35,6 +100,8 @@ public class leaveEntry extends AppCompatActivity {
                 editText4.getText().toString(),
                 editText5.getText().toString()
                 );
+
+
     }
 
     @Override
@@ -68,6 +135,11 @@ public class leaveEntry extends AppCompatActivity {
         protected void onPostExecute(String result) {
 
             super.onPostExecute(result);
+            editText1.setText("");
+            editText2.setText("");
+            editText3.setText("");
+            editText4.setText("");
+            editText5.setText("");
             Toast.makeText(ctx,result,Toast.LENGTH_LONG).show();
         }
 
