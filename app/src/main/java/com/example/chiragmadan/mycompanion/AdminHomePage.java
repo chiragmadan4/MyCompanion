@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 public class AdminHomePage extends AppCompatActivity {
 
@@ -17,6 +18,16 @@ public class AdminHomePage extends AppCompatActivity {
     {
         Intent i = new Intent(AdminHomePage.this,AdminFeedbackPage.class);
         startActivity(i);
+    }
+
+    public void feedbackPage(View view)
+    {
+        Toast.makeText(this,"feature development in progress",Toast.LENGTH_SHORT).show();
+    }
+
+    public void broadcastMessagePage(View view)
+    {
+        Toast.makeText(this,"feature development in progress",Toast.LENGTH_SHORT).show();
     }
 
     @Override

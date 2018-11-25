@@ -3,6 +3,8 @@
     package="com.example.chiragmadan.mycompanion">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -30,7 +32,8 @@
         <activity android:name=".GuestPage" />
         <activity android:name=".AdminHomePage" />
         <activity android:name=".AdminLeaveEntryPage" />
-        <activity android:name=".AdminFeedbackPage"></activity>
+        <activity android:name=".AdminFeedbackPage" />
+        <activity android:name=".AdminLoginPage"></activity>
     </application>
 
 </manifest>

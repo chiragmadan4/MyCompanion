@@ -49,6 +49,7 @@
             style="@android:style/Widget.Material.Button.Colored"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="feedbackPage"
             android:text="Upload Mess Bills" />
 
         <Button
@@ -64,6 +65,7 @@
             style="@android:style/Widget.Material.Button.Colored"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="broadcastMessagePage"
             android:text="Broadcast Messages" />
 
     </LinearLayout>

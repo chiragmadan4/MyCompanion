@@ -33,6 +33,11 @@ public class FeedbackPage extends AppCompatActivity {
         //background task
         BackgroundTask backgroundTask = new BackgroundTask(this);
         feedback_content = editText.getText().toString();
+        if(feedback_content.length()==0)
+        {
+            editText.requestFocus();
+            editText.setError("Field can't be blank");
+        }
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         Date date = new Date();
         time = formatter.format(date);

@@ -1,7 +1,11 @@
 package com.example.chiragmadan.mycompanion;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedWriter;
@@ -26,7 +31,7 @@ public class leaveEntry extends AppCompatActivity {
 
     String roll_no;
     EditText editText1;
-    EditText editText2;
+    TextView textView;
     EditText editText3;
     EditText editText4;
     EditText editText5;
@@ -92,10 +97,13 @@ public class leaveEntry extends AppCompatActivity {
 
     public void uploadLeaveEntry(View view)
     {
+
+        //check geoLocation
+
         BackgroundTask backgroundTask = new BackgroundTask(this);
         backgroundTask.execute("uploadLeaveEntry",
                 editText1.getText().toString(),
-                editText2.getText().toString(),
+                textView.getText().toString(),
                 editText3.getText().toString(),
                 editText4.getText().toString(),
                 editText5.getText().toString()
@@ -104,17 +112,19 @@ public class leaveEntry extends AppCompatActivity {
 
     }
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leave_entry);
         roll_no = getIntent().getExtras().getString("roll_no");
         editText1 = findViewById(R.id.editText1);
-        editText2 = findViewById(R.id.editText2);
+        textView = findViewById(R.id.textView);
         editText3 = findViewById(R.id.editText3);
         editText4 = findViewById(R.id.editText4);
         editText5 = findViewById(R.id.editText5);
-        editText2.setText(roll_no);
+        textView.setText(roll_no);
     }
 
 
@@ -136,7 +146,6 @@ public class leaveEntry extends AppCompatActivity {
 
             super.onPostExecute(result);
             editText1.setText("");
-            editText2.setText("");
             editText3.setText("");
             editText4.setText("");
             editText5.setText("");

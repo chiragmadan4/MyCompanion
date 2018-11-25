@@ -23,56 +23,25 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-public class MainActivity extends AppCompatActivity {
-
-    EditText roll_no_field;
-    EditText password_field;
-    String roll_no;
-    String password;
+public class AdminLoginPage extends AppCompatActivity {
+    EditText editText1;
+    EditText editText2;
     String json_string;
     public void login(View view)
     {
+        editText1 = findViewById(R.id.editText1);
+        editText2 = findViewById(R.id.editText2);
 
-        roll_no_field = findViewById(R.id.roll_no_field);
-        password_field = findViewById(R.id.password_field);
-        roll_no = roll_no_field.getText().toString();
-        password = password_field.getText().toString();
-        if(roll_no_field.getText().toString().length()==0)
-        {
-            roll_no_field.requestFocus();
-            roll_no_field.setError("Field can't be blank");
-        }
-        if(password_field.getText().toString().length()==0)
-        {
-            password_field.requestFocus();
-            password_field.setError("Field can't be blank");
-        }
-        //validate login
-        String method = "loginUser";
+        String method = "loginAdmin";
         BackgroundTask backgroundTask = new BackgroundTask(this);
-        backgroundTask.execute(method,roll_no,password);
-
-    }
-
-    public void guestPage(View view)
-    {
-        Intent i = new Intent(MainActivity.this,GuestPage.class);
-        startActivity(i);
-
-    }
-
-    public void adminHomePage(View view)
-    {
-        Intent i =new Intent(MainActivity.this,AdminLoginPage.class);
-        startActivity(i);
+        backgroundTask.execute(method,editText1.getText().toString(),editText2.getText().toString());
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_admin_login_page);
     }
-
 
     class BackgroundTask extends AsyncTask<String,Void,String> {
 
@@ -90,32 +59,28 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
 
-            //super.onPostExecute(result);
+            super.onPostExecute(result);
+            //Log.i("msg",result);
             try
             {
-                JSONObject obj = new JSONObject(result);
-                Log.i("msg",result);
-                JSONArray users = obj.getJSONArray("server response");
-                JSONObject firstUser = users.getJSONObject(0);
-                String x = firstUser.getString("roll_no");
-                Log.i("x",x);
-                if(x.equals("1"))
+                JSONObject abc = new JSONObject(result);
+                JSONArray arr = abc.getJSONArray("server response");
+                JSONObject admin = arr.getJSONObject(0);
+                if(admin.getString("user_id").equals("1"))
                 {
-                    //login credentials validated
-                    Intent i = new Intent(MainActivity.this,HomeActivity.class);
-                    i.putExtra("roll_no",roll_no);
+                    Toast.makeText(ctx,"login successful",Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(AdminLoginPage.this,AdminHomePage.class);
                     startActivity(i);
                 }
                 else
                 {
-                    //login failed
-                    Toast.makeText(ctx,"Login Failed",Toast.LENGTH_LONG).show();
+                    Toast.makeText(ctx,"login failed",Toast.LENGTH_SHORT).show();
                 }
-            }
-            catch (Exception e)
+
+            }catch (Exception e)
             {
                 e.printStackTrace();
-                Log.i("msg","error in json object parsing",e);
+                Log.i("msg","error in parsing json");
             }
         }
 
@@ -128,10 +93,11 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(String... params) {
             String method = params[0];
             String reg_url;
-            if(method.equals("loginUser"))
+
+            if(method.equals("loginAdmin"))
             {
-                reg_url = "http://192.168.137.1/loginUser.php";
-                String roll_no = params[1];
+                reg_url = "http://192.168.137.1/adminLogin.php";
+                String user_id = params[1];
                 String password = params[2];
                 Log.i("msg", "reached register");
                 try
@@ -142,15 +108,11 @@ public class MainActivity extends AppCompatActivity {
                     Log.i("msg","reached 2");
                     httpURLConnection.setRequestMethod("POST");
                     httpURLConnection.setDoOutput(true);
-
                     OutputStream os = httpURLConnection.getOutputStream();
                     Log.i("msg","reached 3");
                     BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(os,"UTF-8"));
-
-                    String data = URLEncoder.encode("roll_no","UTF-8")+"="+URLEncoder.encode(roll_no,"UTF-8")+"&"+
-                            URLEncoder.encode("password","UTF-8")+"="+URLEncoder.encode(password,"UTF-8");
-
-
+                    String data = URLEncoder.encode("user_id","UTF-8")+"="+URLEncoder.encode(user_id,"UTF-8")+"&"+
+                            URLEncoder.encode("password","UTF-8")+"="+URLEncoder.encode(password,"UTF-8")+"&";
                     bufferedWriter.write(data);
                     bufferedWriter.flush();
                     bufferedWriter.close();
@@ -168,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                     inputStream.close();
                     Log.i("msg","reached 4");
 
-                    return stringBuilder.toString().trim();
+                    return stringBuilder.toString().trim()+"checkString";
                 }
                 catch (Exception e)
                 {
